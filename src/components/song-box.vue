@@ -1,6 +1,11 @@
 <template>
   <div class="song-box" @click="handleHotSongClick">
-    <img :src="album" alt="" class="left">
+    <img 
+      v-lazy="album" 
+      alt="" 
+      class="left"
+      loading="lazy"
+    >
     <div class="right">
       <div class="song-info">
         <div class="song-name">{{ name }}</div>
@@ -29,6 +34,7 @@ const handleHotSongClick = () => {
     box-sizing: border-box;
     padding: 6px;
     height: 68px;
+    cursor: pointer;
     &:hover {
       background-color: #333;
     }

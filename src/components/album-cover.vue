@@ -1,7 +1,13 @@
 <template>
   <transition name="run">
     <div class="album-cover" @click="handleClick">
-      <img class="album" :src="album" alt="" :style="big === 'true' ? 'aspect-ratio: 2.14/1;' : '' "></img>
+      <img class="album" 
+        v-lazy="album" 
+        loading="lazy"
+        alt="" 
+        :style="big === 'true' ? 'aspect-ratio: 2.14/1;' : '' "
+      >
+      </img>
       <div class="cover" v-if="cover === 'true'"></div>
       <div class="play-icon-left">
         <img src="../assets/img/main-right/播放.png" v-if="icon === 'left'" alt="" class="icon-left">
@@ -28,6 +34,7 @@
   .album-cover {
     color: #737373;
     position: relative;
+    cursor: pointer;
     transition: transform 0.3s ease, opacity 0.3s ease; 
     &:hover {
       transform: translateY(-10px);

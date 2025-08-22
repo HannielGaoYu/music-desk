@@ -3,6 +3,9 @@ export const getRangeRandNum = (start: number, end: number) => {
 }
 
 export const formatSongTime = (sec: number) => {
+  if (typeof sec !== "number") {
+    sec = 0
+  }
   let str = ""
   if (sec >= 3600) {
     str += padLeftZeao(Math.floor(sec / 3600), 2)
@@ -21,6 +24,9 @@ export const formatSongTime = (sec: number) => {
 }
 
 export const padLeftZeao = (num: number, total: number) => {
+  if (typeof num !== "number") {
+    num = 0
+  }
   let str = "0000000000000000" + num 
   return str.slice(str.length - total, str.length)
 }

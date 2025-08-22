@@ -3,7 +3,12 @@
     <div class="line" :style="'width: ' + per + '%;'" ></div>
     <div class="main-bar">
       <div class="left">
-        <img class="album" :src="musicDetail?.pic !== undefined ? musicDetail?.pic : defaultPic" style="width: 42px; height: 42px;margin-left: 10px;vertical-align: top;border-radius: 6%;"></img>
+        <img class="album" 
+          loading="lazy"
+          v-lazy="musicDetail?.pic !== undefined ? musicDetail?.pic : defaultPic" 
+          style="width: 42px; height: 42px;margin-left: 10px;vertical-align: top;border-radius: 6%;"
+        >
+      </img>
         <div class="info">
           <div class="name">{{ musicDetail?.name }}</div>
           <div class="ar">{{ musicDetail?.ar_name }}</div>
@@ -14,7 +19,12 @@
         <img class="pre icon" src="@/assets/img/play-bar/last_one.png" @click="handlePlayPre"></img>
         <img class="paruse icon" @click="clickAudio()" :src="isPlay ? pauseIcon : playIcon" ></img>
         <img class="next icon" src="@/assets/img/play-bar/下一首.png" @click="handlePlayNext"></img>
-        <audio ref="audio" @timeupdate="handleAudioTime" @ended="handlePlayNext">
+        <audio 
+          ref="audio" 
+          preload="auto"
+          @timeupdate="handleAudioTime" 
+          @ended="handlePlayNext"
+        >
           <source :src="musicDetail?.url" preload="auto">
         </audio>
       </div>
@@ -159,7 +169,7 @@ const handleAudioTime = () => {
 const handlePlayPre = async () => {
   songIndex.value -= 1
   pause()
-  await mainStore.fetchMusicDetail(songPlayList.value[songIndex.value]?.id + "", "standard", "json")
+  await mainStore.fetchMusicDetail(songPlayList.value[songIndex.value]?.id + "", levelNameColor.value, "json")
   handleSongSize(songPlayList.value[songIndex.value]?.id)
   audio.value.load()
   plays()
@@ -168,7 +178,7 @@ const handlePlayPre = async () => {
 const handlePlayNext = async () => {
   songIndex.value += 1
   pause()
-  await mainStore.fetchMusicDetail(songPlayList.value[songIndex.value]?.id + "", "standard", "json")
+  await mainStore.fetchMusicDetail(songPlayList.value[songIndex.value]?.id + "", levelNameColor.value, "json")
   handleSongSize(songPlayList.value[songIndex.value]?.id)
   audio.value.load()
   plays()
@@ -217,6 +227,7 @@ const handleSongQuality = async (event: any) => {
     pause()
     await mainStore.fetchMusicDetail(songIds.value + "", qualitySelect, "json")
     audio.value.load()
+    audio.value.currentTime = currentTime.value
     plays()
   }
 }
