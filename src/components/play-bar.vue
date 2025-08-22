@@ -21,8 +21,14 @@
       <div class="right">
         <div class="time">{{ formatSongTime(currentTime) }} / {{ formatSongTime(duration) }}</div>
         <div class="level">
-          <span class="level-name">{{ quality }}</span>
-          <div class="levels-bar" v-if="true" @click="handleSongQuality">
+          <span 
+            class="level-name" 
+            :style="`color: ${levelNameColor};border-color: ${levelNameColor};`"
+            @click="handleChangeLevel"
+          >
+            {{ quality }}
+          </span>
+          <div class="levels-bar" v-if="isShowLevelBar" @click="handleSongQuality">
             <div class="standard item" data-quality="standard">标准品质</div>
             <div class="exhigh item" data-quality="exhigh">HQ高品质</div>
             <div class="lossless item" data-quality="lossless">SQ无损品质</div>
@@ -72,13 +78,16 @@ import { eventBus } from '../event-bus';
 import {formatSongTime} from '../utils/tools'
 import { getMusicDetail } from '../service/main/music';
 
-
+const songIds = ref<number>(0) 
 const currentTime = ref<number>(0)
 const duration = ref<number>(0)
 const per = ref()
 const songPlayList = ref<any[]>([])
 const songIndex = ref<number>(0)
+
+const isShowLevelBar = ref<boolean>(false)
 const quality = ref<string>("标准")
+const levelNameColor = ref<string>("#bbb")
 const hiresSize = ref<string>("")
 const jyeffectSize = ref<string>("")
 const skySize = ref<string>("")
@@ -87,14 +96,17 @@ const jymasterSize = ref<string>("")
 const mainStore = useMainStore()
 const {musicDetail, playList} = storeToRefs(mainStore)
 
-eventBus.on("album-click", async(ids)=> {
+eventBus.on("album-click", async(ids: any)=> {
+  
   await mainStore.fetchMusicDetail(ids + "", "standard", "json")
   audio.value.load()
   handleSongSize(ids)
   plays()
+  songIds.value = ids
 })
 
 eventBus.on("song-click", async(songInfo: any) => {
+  
   if (songInfo.type === "hot-playlist") {
     songPlayList.value = playList.value
   }
@@ -108,6 +120,7 @@ eventBus.on("song-click", async(songInfo: any) => {
   audio.value.load()
   handleSongSize(songInfo?.ids)
   plays()
+  songIds.value = songInfo?.ids
 })
 
 const audio = ref()
@@ -145,14 +158,18 @@ const handleAudioTime = () => {
 
 const handlePlayPre = async () => {
   songIndex.value -= 1
+  pause()
   await mainStore.fetchMusicDetail(songPlayList.value[songIndex.value]?.id + "", "standard", "json")
+  handleSongSize(songPlayList.value[songIndex.value]?.id)
   audio.value.load()
   plays()
 }
 
 const handlePlayNext = async () => {
   songIndex.value += 1
+  pause()
   await mainStore.fetchMusicDetail(songPlayList.value[songIndex.value]?.id + "", "standard", "json")
+  handleSongSize(songPlayList.value[songIndex.value]?.id)
   audio.value.load()
   plays()
 }
@@ -172,40 +189,55 @@ const handleSongSize = (ids: any) => {
   })
 }
 
-const handleSongQuality = (event: any) => {
-  alert(event.target.dataset.quality)
+const handleSongQuality = async (event: any) => {
+  const qualitySelect = event.target.dataset.quality
+  if (qualitySelect !== undefined && qualitySelect !== "") {
+    if (qualitySelect === "standard") {
+      quality.value = "标准"
+    } else if (qualitySelect === "exhigh") {
+      quality.value = "HQ"
+      levelNameColor.value = "#00cc65"
+    } else if (qualitySelect === "lossless") {
+      quality.value = "SQ"
+      levelNameColor.value = "#ff6600"
+    } else if (qualitySelect === "hires") {
+      quality.value = "Hi-Fi"
+      levelNameColor.value = "#e5b046"
+    } else if (qualitySelect === "jyeffect") {
+      quality.value = "高清环绕"
+      levelNameColor.value = "#e5b046"
+    } else if (qualitySelect === "sky") {
+      quality.value = "沉浸环绕"
+      levelNameColor.value = "#e5b046"
+    } else {
+      quality.value = "超清母带"
+      levelNameColor.value = "#e5b046"
+    }
+    isShowLevelBar.value = false
+    pause()
+    await mainStore.fetchMusicDetail(songIds.value + "", qualitySelect, "json")
+    audio.value.load()
+    plays()
+  }
 }
 
-// const downloadAudio = () => {
-//   // 下载服务器的MP3文件
-//   let path = 'https://m701.music.126.net/20250806210353/5b7da927acd82c82f2d7c9edceb6af8e/jdymusic/obj/wo3DlMOGwrbDjj7DisKw/26277634920/4d12/1ca6/373c/f93badf0d0be6131e4d4644b53050d19.flac?vuutv=Z7kn2GH1bhAhwYvRUUIdXM+JPhzGsOdpXipIz5vTr7gS9zwd/hsCAkZ8TO9KBTSdpQsNYOxOtYaAWxrbvd0DHb5WYz221rOP/S72SxVrdRc=';// 后端返的地址例如https://xzyp.com/xxx.mp3
-//   const xhr = new XMLHttpRequest();
-//   xhr.open('get',path);
-//   xhr.responseType='blob';
-//   xhr.send()
-//   xhr.onprogress=function(){
-//     console.log(this);
-//   }
-//   xhr.onload= function(){
-//     if(this.status===200||this.status === 304){
-//       const url =URL.createObjectURL(this.response);
-//       let a = document.createElement("a");
-//       a.href = url;
-//       a.download = '音频.flac';
-//       a.style.display = 'none'  
-//       document.body.appendChild(a)
-//       a.click();
-//       document.body.removeChild(a)
-//     }
-//   }
-// }
+const handleChangeLevel = () => {
+  isShowLevelBar.value = true
+}
+
 </script>
 
 <style scoped lang="less">
   .play-bar {
+    position: relative;
     width: 100%;
     height: 100%;
     backdrop-filter: blur(20px);
+    z-index: 600;
+    // overflow: hidden;
+    &:hover {
+      transform: none;
+    }
     .line {
       width: 0%;
       height: 1%;
@@ -239,12 +271,25 @@ const handleSongQuality = (event: any) => {
         } 
       }
       .right {
+        height: 100%;
         position: absolute;
         right: 20px;
         display: flex;
         align-content: center;
+        align-items: center;
         .level {
+          display: flex;
+          align-items: center;
           position: relative;
+          .level-name {
+            font-size: 10px;
+            cursor: pointer;
+            padding: 3px 5px;
+            border: 1px solid #626262;
+            border-radius: 3px;
+            margin-left: 10px;
+            margin-right: 20px;
+          }
           .levels-bar {
             display: flex;
             flex-direction: column;
@@ -258,6 +303,7 @@ const handleSongQuality = (event: any) => {
             bottom: 42px;
             left: -280px;
             margin: 0 auto;
+            z-index: 700;
             background-color: #1a1b20;
             .item {
               font-size: 11px;
@@ -298,6 +344,9 @@ const handleSongQuality = (event: any) => {
                   top: 12px;
                   width: 36px;
                   height: 36px;
+                }
+                &:hover {
+                  background-color: #333;
                 }
               }
             }
