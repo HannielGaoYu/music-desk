@@ -3,7 +3,7 @@ export const getRangeRandNum = (start: number, end: number) => {
 }
 
 export const formatSongTime = (sec: number) => {
-  if (typeof sec !== "number") {
+  if (sec === Number.NaN) {
     sec = 0
   }
   let str = ""
@@ -19,6 +19,9 @@ export const formatSongTime = (sec: number) => {
   } else {
     str += "00:"
     str += padLeftZeao(Math.floor(sec), 2)
+  }
+  if (str === "00:aN") {
+    return "00:00"
   }
   return str
 }

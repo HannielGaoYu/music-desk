@@ -70,8 +70,14 @@
             </div>
           </div>
         </div>
-        <div class="word"></div>
-        <div class="list"></div>
+        <div class="word" @click="handleChangeWordDisplay">
+          <img :src="`${isShowWord ? songWordActiveIcon : songWordIcon}`" style="width: 30px;
+          height: 30px; vertical-align: top;" alt="">
+        </div>
+        <div class="list" @click="handleChangeSongListDisplay">
+          <img :src="`${isShowList ? songListIconActive : songListIcon}`" style="width: 20px;
+          height: 20px; vertical-align: top;" alt="">
+        </div>
       </div>
     </div>
   </div>
@@ -88,6 +94,12 @@ import { eventBus } from '../event-bus';
 import {formatSongTime} from '../utils/tools'
 import { getMusicDetail } from '../service/main/music';
 
+import songWordIcon from '../assets/img/play-bar/点歌_词_32.png'
+import songWordActiveIcon from '../assets/img/play-bar/点歌_词_32 (1).png'
+
+import songListIcon from '../assets/img/play-bar/音乐列表-copy.png'
+import songListIconActive from '../assets/img/play-bar/音乐列表-copy2.png'
+
 const songIds = ref<number>(0) 
 const currentTime = ref<number>(0)
 const duration = ref<number>(0)
@@ -97,18 +109,22 @@ const songIndex = ref<number>(0)
 
 const isShowLevelBar = ref<boolean>(false)
 const quality = ref<string>("标准")
+const qualitySelect = ref<string>("standard")
 const levelNameColor = ref<string>("#bbb")
 const hiresSize = ref<string>("")
 const jyeffectSize = ref<string>("")
 const skySize = ref<string>("")
 const jymasterSize = ref<string>("")
 
+const isShowWord = ref<boolean>(false)
+const isShowList = ref<boolean>(false)
+
 const mainStore = useMainStore()
 const {musicDetail, playList} = storeToRefs(mainStore)
 
 eventBus.on("album-click", async(ids: any)=> {
   
-  await mainStore.fetchMusicDetail(ids + "", "standard", "json")
+  await mainStore.fetchMusicDetail(ids + "", qualitySelect.value, "json")
   audio.value.load()
   handleSongSize(ids)
   plays()
@@ -126,7 +142,7 @@ eventBus.on("song-click", async(songInfo: any) => {
       }
   }
   pause()
-  await mainStore.fetchMusicDetail(songInfo?.ids + "", "standard", "json")
+  await mainStore.fetchMusicDetail(songInfo?.ids + "",qualitySelect.value, "json")
   audio.value.load()
   handleSongSize(songInfo?.ids)
   plays()
@@ -169,19 +185,20 @@ const handleAudioTime = () => {
 const handlePlayPre = async () => {
   songIndex.value -= 1
   pause()
-  await mainStore.fetchMusicDetail(songPlayList.value[songIndex.value]?.id + "", levelNameColor.value, "json")
-  handleSongSize(songPlayList.value[songIndex.value]?.id)
+  await mainStore.fetchMusicDetail(songPlayList.value[songIndex.value]?.id + "", qualitySelect.value, "json")
+  alert(songPlayList.value[songIndex.value]?.id)
   audio.value.load()
   plays()
+  handleSongSize(songPlayList.value[songIndex.value]?.id)
 }
 
 const handlePlayNext = async () => {
   songIndex.value += 1
   pause()
-  await mainStore.fetchMusicDetail(songPlayList.value[songIndex.value]?.id + "", levelNameColor.value, "json")
-  handleSongSize(songPlayList.value[songIndex.value]?.id)
+  await mainStore.fetchMusicDetail(songPlayList.value[songIndex.value]?.id + "", qualitySelect.value, "json")
   audio.value.load()
   plays()
+  handleSongSize(songPlayList.value[songIndex.value]?.id)
 }
 
 const handleSongSize = (ids: any) => {
@@ -200,23 +217,23 @@ const handleSongSize = (ids: any) => {
 }
 
 const handleSongQuality = async (event: any) => {
-  const qualitySelect = event.target.dataset.quality
-  if (qualitySelect !== undefined && qualitySelect !== "") {
-    if (qualitySelect === "standard") {
+  qualitySelect.value = event.target.dataset.quality
+  if (qualitySelect !== undefined && qualitySelect.value !== "") {
+    if (qualitySelect.value === "standard") {
       quality.value = "标准"
-    } else if (qualitySelect === "exhigh") {
+    } else if (qualitySelect.value === "exhigh") {
       quality.value = "HQ"
       levelNameColor.value = "#00cc65"
-    } else if (qualitySelect === "lossless") {
+    } else if (qualitySelect.value === "lossless") {
       quality.value = "SQ"
       levelNameColor.value = "#ff6600"
-    } else if (qualitySelect === "hires") {
+    } else if (qualitySelect.value === "hires") {
       quality.value = "Hi-Fi"
       levelNameColor.value = "#e5b046"
-    } else if (qualitySelect === "jyeffect") {
+    } else if (qualitySelect.value === "jyeffect") {
       quality.value = "高清环绕"
       levelNameColor.value = "#e5b046"
-    } else if (qualitySelect === "sky") {
+    } else if (qualitySelect.value === "sky") {
       quality.value = "沉浸环绕"
       levelNameColor.value = "#e5b046"
     } else {
@@ -225,7 +242,7 @@ const handleSongQuality = async (event: any) => {
     }
     isShowLevelBar.value = false
     pause()
-    await mainStore.fetchMusicDetail(songIds.value + "", qualitySelect, "json")
+    await mainStore.fetchMusicDetail(songIds.value + "", qualitySelect.value, "json")
     audio.value.load()
     audio.value.currentTime = currentTime.value
     plays()
@@ -236,6 +253,13 @@ const handleChangeLevel = () => {
   isShowLevelBar.value = true
 }
 
+const handleChangeWordDisplay = () => {
+  isShowWord.value = !isShowWord.value
+}
+
+const handleChangeSongListDisplay = () => {
+  isShowList.value = !isShowList.value
+}
 </script>
 
 <style scoped lang="less">
@@ -284,7 +308,7 @@ const handleChangeLevel = () => {
       .right {
         height: 100%;
         position: absolute;
-        right: 20px;
+        right: 10px;
         display: flex;
         align-content: center;
         align-items: center;
@@ -299,7 +323,7 @@ const handleChangeLevel = () => {
             border: 1px solid #626262;
             border-radius: 3px;
             margin-left: 10px;
-            margin-right: 20px;
+            margin-right: 0px;
           }
           .levels-bar {
             display: flex;

@@ -3,7 +3,6 @@
     <div class="album-cover" @click="handleClick">
       <img class="album" 
         v-lazy="album" 
-        loading="lazy"
         alt="" 
         :style="big === 'true' ? 'aspect-ratio: 2.14/1;' : '' "
       >
