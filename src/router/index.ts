@@ -4,10 +4,15 @@ import {createRouter, createWebHashHistory} from 'vue-router'
 // import Login from '../views/login/login.vue'
 
 const Login = () => import('../views/login/login.vue')
-const Main = () => import('../views/main/main.vue')
+// const Main = () => import('../views/main/main.vue')
 
-const recommend = () => import('../views/main/c-views/recommend.vue')
-const onlineExtract = () => import('../views/main/c-views/online-extract.vue')
+import Main from '../views/main/main.vue'
+
+// const recommend = () => import('../views/main/c-views/recommend.vue')
+// const onlineExtract = () => import('../views/main/c-views/online-extract.vue')
+
+import recommend from '../views/main/c-views/recommend.vue'
+import onlineExtract from '../views/main/c-views/online-extract.vue'
 
 const Play = () => import('../views/play/play.vue')
 
@@ -25,6 +30,10 @@ export default createRouter({
     {
       path: "/main",
       component: Main,
+      name: "Main",
+      meta: {
+        keepAlive: true
+      },
       children: [
         {
           path: "/main",
@@ -32,7 +41,7 @@ export default createRouter({
         },
         {
           path: "/main/recommend",
-          component: recommend
+          component: recommend,
         },
         {
           path: "/main/online-extract",

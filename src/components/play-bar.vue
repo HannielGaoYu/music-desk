@@ -1,5 +1,5 @@
 <template>
-  <div class="play-bar">
+  <div class="play-bar" @click="handleNavToPlay">
     <div class="line" :style="'width: ' + per + '%;'" ></div>
     <div class="main-bar">
       <div class="left">
@@ -16,9 +16,9 @@
       </div>
       <div class="center" style="">
         <img class="like icon" src="@/assets/img/play-bar/喜欢.png" ></img>
-        <img class="pre icon" src="@/assets/img/play-bar/last_one.png" @click="handlePlayPre"></img>
-        <img class="paruse icon" @click="clickAudio()" :src="isPlay ? pauseIcon : playIcon" ></img>
-        <img class="next icon" src="@/assets/img/play-bar/下一首.png" @click="handlePlayNext"></img>
+        <img class="pre icon" src="@/assets/img/play-bar/last_one.png" @click.stop="handlePlayPre"></img>
+        <img class="paruse icon" @click.stop="clickAudio()" :src="isPlay ? pauseIcon : playIcon" ></img>
+        <img class="next icon" src="@/assets/img/play-bar/下一首.png" @click.stop="handlePlayNext"></img>
         <audio 
           ref="audio" 
           preload="auto"
@@ -26,7 +26,7 @@
           @ended="handlePlayNext"
         >
           <source :src="musicDetail?.url" preload="auto">
-        </audio>
+        </audio>       
       </div>
       <div class="right">
         <div class="time">{{ formatSongTime(currentTime) }} / {{ formatSongTime(duration) }}</div>
@@ -34,47 +34,66 @@
           <span 
             class="level-name" 
             :style="`color: ${levelNameColor};border-color: ${levelNameColor};`"
-            @click="handleChangeLevel"
+            @click.stop="handleChangeLevel"
           >
             {{ quality }}
           </span>
-          <div class="levels-bar" v-if="isShowLevelBar" @click="handleSongQuality">
+          <div class="levels-bar" v-if="isShowLevelBar" @click.stop="handleSongQuality">
             <div class="standard item" data-quality="standard">标准品质</div>
             <div class="exhigh item" data-quality="exhigh">HQ高品质</div>
             <div class="lossless item" data-quality="lossless">SQ无损品质</div>
             <div class="top-level">
               <div class="hires item" data-quality="hires">
-                <div class="item-name">HIFI发烧品质</div>
-                <div class="item-dec">发烧音质体验</div>
-                <div class="size">{{ hiresSize }}</div>
-                <img src="../assets/img/play-bar/ic_Hi-Res.png" alt="" class="quality-icon">
+                <div class="item-name" data-quality="hires">HIFI发烧品质</div>
+                <div class="item-dec" data-quality="hires">发烧音质体验</div>
+                <div class="size" data-quality="hires">{{ hiresSize }}</div>
+                <img 
+                  src="../assets/img/play-bar/ic_Hi-Res.png" 
+                  alt="" class="quality-icon"
+                  data-quality="hires"
+                >
               </div>
               <div class="jyeffect item" data-quality="jyeffect">
-                <div class="item-name">高清环绕声</div>
-                <div class="item-dec">双耳环绕体验</div>
-                <div class="size">{{ jyeffectSize }}</div>
-                <img src="../assets/img/play-bar/jyeffect音乐.png" alt="" class="quality-icon">
+                <div class="item-name" data-quality="jyeffect">高清环绕声</div>
+                <div class="item-dec" data-quality="jyeffect">双耳环绕体验</div>
+                <div class="size" data-quality="jyeffect">{{ jyeffectSize }}</div>
+                <img 
+                  src="../assets/img/play-bar/jyeffect音乐.png" 
+                  alt="" 
+                  class="quality-icon"
+                  data-quality="jyeffect"
+                >
               </div>
               <div class="sky item" data-quality="sky">
-                <div class="item-name">沉浸环绕声</div>
-                <div class="item-dec">双耳沉浸环绕体验</div>
-                <div class="size">{{ skySize }}</div>
-                <img src="../assets/img/play-bar/sky音乐.png" alt="" class="quality-icon">
+                <div class="item-name" data-quality="sky">沉浸环绕声</div>
+                <div class="item-dec" data-quality="sky">双耳沉浸环绕体验</div>
+                <div class="size" data-quality="sky">{{ skySize }}</div>
+                <img 
+                  src="../assets/img/play-bar/sky音乐.png" 
+                  alt="" 
+                  class="quality-icon"
+                  data-quality="sky"
+                >
               </div>
               <div class="jymaster item" data-quality="jymaster">
-                <div class="item-name">超清母带</div>
-                <div class="item-dec">还原声音细节</div>
-                <div class="size">{{ jymasterSize }}</div>
-                <img src="../assets/img/play-bar/jymaster音质.png" alt="" class="quality-icon">
+                <div class="item-name" data-quality="jymaster">超清母带</div>
+                <div class="item-dec" data-quality="jymaster">还原声音细节</div>
+                <div class="size" data-quality="jymaster">{{ jymasterSize }}</div>
+                <img 
+                  src="../assets/img/play-bar/jymaster音质.png" 
+                  alt="" 
+                  class="quality-icon"
+                  data-quality="jymaster"
+                >
               </div>
             </div>
           </div>
         </div>
-        <div class="word" @click="handleChangeWordDisplay">
+        <div class="word" @click.stop="handleChangeWordDisplay">
           <img :src="`${isShowWord ? songWordActiveIcon : songWordIcon}`" style="width: 30px;
           height: 30px; vertical-align: top;" alt="">
         </div>
-        <div class="list" @click="handleChangeSongListDisplay">
+        <div class="list" @click.stop="handleChangeSongListDisplay">
           <img :src="`${isShowList ? songListIconActive : songListIcon}`" style="width: 20px;
           height: 20px; vertical-align: top;" alt="">
         </div>
@@ -84,7 +103,7 @@
 </template>
 
 <script setup lang="ts">
-import {  ref, } from 'vue';
+import {  onActivated, onDeactivated, onUnmounted, ref } from 'vue';
 import {useMainStore} from '../store/main/index'
 import playIcon from '../assets/img/play-bar/播放.png'
 import pauseIcon from '../assets/img/play-bar/暂停.png'
@@ -99,6 +118,21 @@ import songWordActiveIcon from '../assets/img/play-bar/点歌_词_32 (1).png'
 
 import songListIcon from '../assets/img/play-bar/音乐列表-copy.png'
 import songListIconActive from '../assets/img/play-bar/音乐列表-copy2.png'
+import { useRouter } from 'vue-router';
+
+onUnmounted(() => {
+  alert("hhh")
+})
+
+onDeactivated(() => {
+  pause()
+  plays()
+})
+
+onActivated(() => {
+  pause()
+  plays()
+})
 
 const songIds = ref<number>(0) 
 const currentTime = ref<number>(0)
@@ -121,6 +155,9 @@ const isShowList = ref<boolean>(false)
 
 const mainStore = useMainStore()
 const {musicDetail, playList} = storeToRefs(mainStore)
+
+const router = useRouter()
+
 
 eventBus.on("album-click", async(ids: any)=> {
   
@@ -218,7 +255,7 @@ const handleSongSize = (ids: any) => {
 
 const handleSongQuality = async (event: any) => {
   qualitySelect.value = event.target.dataset.quality
-  if (qualitySelect !== undefined && qualitySelect.value !== "") {
+  if (qualitySelect !== undefined && qualitySelect.value !== "" && event.target.dataset.quality !== undefined) {
     if (qualitySelect.value === "standard") {
       quality.value = "标准"
     } else if (qualitySelect.value === "exhigh") {
@@ -259,6 +296,14 @@ const handleChangeWordDisplay = () => {
 
 const handleChangeSongListDisplay = () => {
   isShowList.value = !isShowList.value
+}
+
+const handleNavToPlay = () => {
+  eventBus.off("album-click")
+  eventBus.off("song-click")
+  router.push({
+    path: "/play"
+  })
 }
 </script>
 
@@ -343,6 +388,7 @@ const handleChangeSongListDisplay = () => {
             .item {
               font-size: 11px;
               width: 100%;
+              height: 100%;
               padding: 10px 2px;
               border-radius: 3px;
               cursor: pointer;

@@ -41,14 +41,19 @@
       <router-view @song-to-main="handleSongPlay"></router-view>
     </div>
     <div class="foot-bar" style="position: fixed; bottom: 0; left: 0; right: 0;width: 100%; height: 60px;">
-      <play-bar :songIds="songId"></play-bar>
+      <play-bar></play-bar>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'; 
+import { onUnmounted, ref } from 'vue'; 
 import PlayBar from '../../components/play-bar.vue'
+
+onUnmounted(() => {
+  alert("ddd")
+})
+
  // 需引入 ipcRenderer 
 const ipcRenderer = window.ipcRenderer 
 const isKeyDown = ref<boolean>(false); 

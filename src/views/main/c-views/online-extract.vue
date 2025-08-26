@@ -28,6 +28,7 @@ const handleDownload = async () => {
 }
 
 window.ipcRenderer.on('download-progress', (e, a) => {
+  console.log(e);
   process.value = a
 })
 

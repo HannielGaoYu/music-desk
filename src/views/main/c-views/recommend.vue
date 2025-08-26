@@ -65,7 +65,7 @@
           <div class="item">
             <album-cover icon="left" cover="true" :album="item?.coverImgUrl" :text="item?.name"></album-cover>
           </div>
-      </template>
+      </template> 
     </div>
 
     <div class="treasure-song" style="height: 60px;"></div>
