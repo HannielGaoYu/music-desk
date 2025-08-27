@@ -1,3 +1,5 @@
+const timeReg = /\[(\d{2}):(\d{2})\.(\d{2,3})]/
+
 export const getRangeRandNum = (start: number, end: number) => {
   return Math.floor(Math.random() * (end - start + 1) ) + start
 }
@@ -32,4 +34,29 @@ export const padLeftZeao = (num: number, total: number) => {
   }
   let str = "0000000000000000" + num 
   return str.slice(str.length - total, str.length)
+}
+
+export const parseLyric = (lrcString: string | null) => {
+  if (typeof lrcString === null) {
+    return []
+  }
+  const lyricInfos = []
+
+  const lyricLines = lrcString!.split("\n")
+  for (const lineString of lyricLines) {
+    const results = timeReg.exec(lineString)
+    if (!results) continue
+    const minute = parseInt(results![1]) * 60 * 1000
+    const second = parseInt(results![2]) * 1000
+    const mSecond = results![3].length === 2 ? parseInt(results![3]) * 10 : parseInt(results![3])
+
+    const time = minute + second + mSecond
+    const text = lineString.replace(timeReg, "")
+    const lyricInfo = {
+      text,
+      time
+    }
+    lyricInfos.push(lyricInfo)
+  }
+  return lyricInfos
 }

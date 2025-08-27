@@ -258,6 +258,7 @@ const handleSongQuality = async (event: any) => {
   if (qualitySelect !== undefined && qualitySelect.value !== "" && event.target.dataset.quality !== undefined) {
     if (qualitySelect.value === "standard") {
       quality.value = "标准"
+      levelNameColor.value = "#bbb"
     } else if (qualitySelect.value === "exhigh") {
       quality.value = "HQ"
       levelNameColor.value = "#00cc65"
@@ -273,7 +274,7 @@ const handleSongQuality = async (event: any) => {
     } else if (qualitySelect.value === "sky") {
       quality.value = "沉浸环绕"
       levelNameColor.value = "#e5b046"
-    } else {
+    } else if (qualitySelect.value === "jymaster") {
       quality.value = "超清母带"
       levelNameColor.value = "#e5b046"
     }
@@ -299,8 +300,6 @@ const handleChangeSongListDisplay = () => {
 }
 
 const handleNavToPlay = () => {
-  eventBus.off("album-click")
-  eventBus.off("song-click")
   router.push({
     path: "/play"
   })
@@ -309,6 +308,7 @@ const handleNavToPlay = () => {
 
 <style scoped lang="less">
   .play-bar {
+    color: #fff;
     position: relative;
     width: 100%;
     height: 100%;
@@ -335,6 +335,7 @@ const handleNavToPlay = () => {
         display: flex;
         align-items: center;
         .info {
+          color: #fff;
           display: flex;
           flex-direction: column;
           justify-content: center;
