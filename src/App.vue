@@ -5,6 +5,9 @@
         <component :is="Component"/>
       </keep-alive>
     </router-view>
+    <div class="foot-bar" style="position: fixed; left: 0; bottom: 0; width: 100%; height: 60px;">
+      <play-bar></play-bar>
+    </div>
   </div>
 </template>
 

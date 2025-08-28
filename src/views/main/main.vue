@@ -40,9 +40,9 @@
     <div class="main-right">
       <router-view @song-to-main="handleSongPlay"></router-view>
     </div>
-    <div class="foot-bar" style="position: fixed; bottom: 0; left: 0; right: 0;width: 100%; height: 60px;">
+    <!-- <div class="foot-bar" style="position: fixed; left: 0; bottom: 0; width: 100%; height: 60px;">
       <play-bar></play-bar>
-    </div>
+    </div> -->
   </div>
 </template>
 

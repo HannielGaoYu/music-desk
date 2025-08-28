@@ -1,19 +1,16 @@
 <template>
-  <div class="play" @click="handleBack">
+  <div class="play">
     <div class="bg-img">
       <img v-lazy="musicDetail?.pic" alt="" style="width: 100%;height: 100%;">
     </div>
     <div class="bg-cover"></div>
-    <div class="album">
-      <img v-lazy="musicDetail?.pic" alt="" style="width: 100%; height: 100%;">
+    <div class="album" @click="handleBack">
+      <img v-lazy="musicDetail?.pic" alt="" style="width: 100%; aspect-ratio: 1/1;">
     </div>
     <div class="song-word">
       <template v-for="(item) in parseLyric(musicDetail.lyric)">
         <div class="item">{{item.text}}</div>
       </template>
-    </div>
-    <div class="foot-bar" style="position: fixed; bottom: 0; left: 0; right: 0;width: 100%; height: 60px;">
-      <play-bar></play-bar>
     </div>
   </div>
 </template>
@@ -39,7 +36,7 @@ const handleBack = () => {
     color: #000;
     width: 100%;
     height: 100vh;
-    z-index: 1;
+    z-index: 0;
     background-repeat: no-repeat;
     .bg-cover, .bg-img {
       position: fixed;
@@ -59,13 +56,12 @@ const handleBack = () => {
       top: 23%;
       width: 26%;
       aspect-ratio: 1/1;
-      background-color: #245;
     }
     .song-word {
       position: absolute;
-      left: 50%;
+      left: 45%;
       top: 6%;
-      width: 50%;
+      width: 55%;
       aspect-ratio: 1/1;
       // background-color: #295;
       overflow-y: auto;
@@ -75,7 +71,7 @@ const handleBack = () => {
       .item {
         color: #aaa;
         font-size: 15px;
-        width: 50%;
+        width: 55%;
         margin: 0 auto;
         text-align: center;
         margin-bottom: 30px;

@@ -1,8 +1,12 @@
 <template>
-  <div class="play-bar" @click="handleNavToPlay">
+  <div class="play-bar" @click="handleCloseTab">
     <div class="line" :style="'width: ' + per + '%;'" ></div>
+    <div class="bg-cover"></div>
+    <div class="bg-img" >
+      <img :src="musicDetail?.pic" alt="" style="width: 100%;height: 100%;">
+    </div>
     <div class="main-bar">
-      <div class="left">
+      <div class="left" @click="handleNavSwitch">
         <img class="album" 
           loading="lazy"
           v-lazy="musicDetail?.pic !== undefined ? musicDetail?.pic : defaultPic" 
@@ -173,8 +177,8 @@ eventBus.on("song-click", async(songInfo: any) => {
   if (songInfo.type === "hot-playlist") {
     songPlayList.value = playList.value
   }
-  for (let i = 0; i < songPlayList.value?.length; i++) {
-      if (songPlayList.value[i]?.id + "" === songInfo?.ids + "") {
+  for (let i = 0; i < playList.value?.length; i++) {
+      if (playList.value[i]?.id + "" === songInfo?.ids + "") {
         songIndex.value = i
       }
   }
@@ -222,20 +226,20 @@ const handleAudioTime = () => {
 const handlePlayPre = async () => {
   songIndex.value -= 1
   pause()
-  await mainStore.fetchMusicDetail(songPlayList.value[songIndex.value]?.id + "", qualitySelect.value, "json")
-  alert(songPlayList.value[songIndex.value]?.id)
+  await mainStore.fetchMusicDetail(playList.value[songIndex.value]?.id + "", qualitySelect.value, "json")
+  alert(playList.value[songIndex.value]?.id)
   audio.value.load()
   plays()
-  handleSongSize(songPlayList.value[songIndex.value]?.id)
+  handleSongSize(playList.value[songIndex.value]?.id)
 }
 
 const handlePlayNext = async () => {
   songIndex.value += 1
   pause()
-  await mainStore.fetchMusicDetail(songPlayList.value[songIndex.value]?.id + "", qualitySelect.value, "json")
+  await mainStore.fetchMusicDetail(playList.value[songIndex.value]?.id + "", qualitySelect.value, "json")
   audio.value.load()
   plays()
-  handleSongSize(songPlayList.value[songIndex.value]?.id)
+  handleSongSize(playList.value[songIndex.value]?.id)
 }
 
 const handleSongSize = (ids: any) => {
@@ -299,7 +303,13 @@ const handleChangeSongListDisplay = () => {
   isShowList.value = !isShowList.value
 }
 
-const handleNavToPlay = () => {
+const handleCloseTab = () => {
+  isShowLevelBar.value = false
+  isShowList.value = false
+  isShowWord.value = false
+}
+
+const handleNavSwitch = () => {
   router.push({
     path: "/play"
   })
@@ -309,11 +319,29 @@ const handleNavToPlay = () => {
 <style scoped lang="less">
   .play-bar {
     color: #fff;
-    position: relative;
     width: 100%;
     height: 100%;
-    backdrop-filter: blur(20px);
-    z-index: 600;
+    z-index: 200;
+    .bg-cover, .bg-img {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 60px;
+      z-index: -1;
+    }
+
+    .bg-cover {
+      background-color: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(20px);
+      z-index: 2;
+    }
+    .bg-img {
+      display: none;
+    }
     // overflow: hidden;
     &:hover {
       transform: none;
@@ -330,7 +358,8 @@ const handleNavToPlay = () => {
       // justify-content: space-between;
       width: 100%;
       height: 99%;
-      background-color: rgba(24, 24, 24,1);
+      // background-color: rgba(24, 24, 24,1);
+      z-index: 200;
       .left {
         display: flex;
         align-items: center;
