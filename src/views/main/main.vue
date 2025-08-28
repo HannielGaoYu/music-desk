@@ -40,15 +40,11 @@
     <div class="main-right">
       <router-view @song-to-main="handleSongPlay"></router-view>
     </div>
-    <!-- <div class="foot-bar" style="position: fixed; left: 0; bottom: 0; width: 100%; height: 60px;">
-      <play-bar></play-bar>
-    </div> -->
   </div>
 </template>
 
 <script setup lang="ts">
 import { onUnmounted, ref } from 'vue'; 
-import PlayBar from '../../components/play-bar.vue'
 
 onUnmounted(() => {
   alert("ddd")

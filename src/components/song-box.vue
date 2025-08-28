@@ -18,11 +18,12 @@
 
 <script setup lang="ts">
 import {eventBus} from '../event-bus'
-const {album, name, ar, ids} = defineProps(["album", "name", "ar", "ids"])
+const {album, name, ar, ids, id} = defineProps(["album", "name", "ar", "ids", "id"])
 
-
+const emit = defineEmits(["song-click"])
 const handleHotSongClick = () => {
-  eventBus.emit("song-click", {ids, type: "hot-playlist"})
+  eventBus.emit("song-click", {ids, id})
+  emit("song-click")
 }
 </script>
 

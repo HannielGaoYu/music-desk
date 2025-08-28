@@ -142,7 +142,6 @@ const songIds = ref<number>(0)
 const currentTime = ref<number>(0)
 const duration = ref<number>(0)
 const per = ref()
-const songPlayList = ref<any[]>([])
 const songIndex = ref<number>(0)
 
 const isShowLevelBar = ref<boolean>(false)
@@ -173,9 +172,8 @@ eventBus.on("album-click", async(ids: any)=> {
 })
 
 eventBus.on("song-click", async(songInfo: any) => {
-  
-  if (songInfo.type === "hot-playlist") {
-    songPlayList.value = playList.value
+  if (playList.value.length === 0) {
+    songIndex.value = songInfo?.id
   }
   for (let i = 0; i < playList.value?.length; i++) {
       if (playList.value[i]?.id + "" === songInfo?.ids + "") {

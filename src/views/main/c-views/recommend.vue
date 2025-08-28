@@ -53,9 +53,32 @@
     <div class="hot-hear">
       <template v-for="(item) in 12" key="item">
         <div style="flex-shrink: 0; width: 33.3%;">
-          <song-box :album="playList[item]?.al?.picUrl" :name="playList[item]?.name" :ar="playList[item]?.ar[0].name" :ids="playList[item]?.id"></song-box>
-          <song-box :album="playList[item+12]?.al?.picUrl" :name="playList[item+12]?.name" :ar="playList[item+12]?.ar[0].name" :ids="playList[item+12]?.id"></song-box>
-          <song-box :album="playList[item+24]?.al?.picUrl" :name="playList[item+24]?.name" :ar="playList[item+24]?.ar[0].name" :ids="playList[item+24]?.id"></song-box>
+          <song-box 
+            :album="hotPlayList[item]?.al?.picUrl" 
+            :name="hotPlayList[item]?.name" 
+            :ar="hotPlayList[item]?.ar[0].name" 
+            :ids="hotPlayList[item]?.id" 
+            @song-click="handleSongClick"
+            :id="item"
+          >
+          </song-box>
+          <song-box 
+            :album="hotPlayList[item+12]?.al?.picUrl" 
+            :name="hotPlayList[item+12]?.name" 
+            :ar="hotPlayList[item+12]?.ar[0].name" 
+            :ids="hotPlayList[item+12]?.id" @song-click="handleSongClick"
+            :id="item + 12"
+          >
+          </song-box>
+          <song-box 
+            :album="hotPlayList[item+24]?.al?.picUrl" 
+            :name="hotPlayList[item+24]?.name" 
+            :ar="hotPlayList[item+24]?.ar[0].name" 
+            :ids="hotPlayList[item+24]?.id" 
+            @song-click="handleSongClick"
+            :id="item + 24"
+          >
+          </song-box>
         </div>
       </template>
     </div>
@@ -84,8 +107,9 @@ import { ref } from 'vue'
 const mainStore = useMainStore()
 mainStore.fetchBanner()
 mainStore.fetchTopPlayList("全部", 12, 0)
-mainStore.fetchPlayList(3778678)
-const {banner, topPlayList, playList} = storeToRefs(mainStore)
+// mainStore.fetchPlayList(3778678)
+mainStore.fetchHotPlayList()
+const {banner, topPlayList, hotPlayList, playList} = storeToRefs(mainStore)
 
 const randPlayList = ref<any[]>([])
 const randNum = getRangeRandNum(0, 9) 
@@ -101,6 +125,10 @@ const playSong = (data: any) => {
   if (data?.targetId !== 0) {
     emit('song-to-main', data?.targetId)
   }
+}
+
+const handleSongClick = () => {
+  playList.value = hotPlayList.value
 }
 
 </script>

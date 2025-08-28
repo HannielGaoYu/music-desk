@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia'
-import {getBanner, getPlayList, getTopPlayList, getMusicSearchRes, getMusicDetail, getHotPlayList} from '../../service/main/music'
+import {getBanner, getPlayList, getTopPlayList, getMusicSearchRes, getMusicDetail} from '../../service/main/music'
 
 interface IMainState {
   banner: any[],
@@ -29,6 +29,10 @@ export const useMainStore = defineStore('main',{
       const res = await getPlayList(id)
       this.playList = res.data.playlist.tracks
     },
+    async fetchHotPlayList(id = 3778678) {
+      const res = await getPlayList(id)
+      this.hotPlayList = res.data.playlist.tracks
+    },
     // cat=全部&limit=6&offset=0
     async fetchTopPlayList(cat: string, limit: number , offset: number) {
       const res = await getTopPlayList(cat, limit, offset)
@@ -42,9 +46,5 @@ export const useMainStore = defineStore('main',{
       const res = await getMusicDetail(ids, level, type)
       this.musicDetail = res.data
     },
-    async fetchHotPlayList() {
-      const res = await getHotPlayList()
-      this.hotPlayList = res.data.tags
-    }
   }
 })
