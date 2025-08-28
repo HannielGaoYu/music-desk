@@ -60,3 +60,16 @@ export const parseLyric = (lrcString: string | null) => {
   }
   return lyricInfos
 }
+
+export const foundSongWord = (wordList: any[], currentTime: number) => {
+  if (wordList.length === 0) return 0
+  let index = wordList.length - 1
+  for(let i = 0; i < wordList.length; i++) {
+    let time = wordList[i].time
+    if (currentTime < time) {
+      index = i - 1
+      break
+    }
+  }
+  return index
+}

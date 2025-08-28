@@ -219,13 +219,13 @@ const handleAudioTime = () => {
   duration.value = audio.value.duration
   per.value = (audio.value.currentTime / audio.value.duration) * 100
   console.log(per.value)
+  eventBus.emit("song-time", currentTime.value)
 }
 
 const handlePlayPre = async () => {
   songIndex.value -= 1
   pause()
   await mainStore.fetchMusicDetail(playList.value[songIndex.value]?.id + "", qualitySelect.value, "json")
-  alert(playList.value[songIndex.value]?.id)
   audio.value.load()
   plays()
   handleSongSize(playList.value[songIndex.value]?.id)

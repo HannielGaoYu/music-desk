@@ -7,9 +7,9 @@
     <div class="album" @click="handleBack">
       <img v-lazy="musicDetail?.pic" alt="" style="width: 100%; aspect-ratio: 1/1;">
     </div>
-    <div class="song-word">
-      <template v-for="(item) in parseLyric(musicDetail.lyric)">
-        <div class="item">{{item.text}}</div>
+    <div class="song-word" ref="songWordRef">
+      <template v-for="(item, index) in parseLyric(musicDetail?.lyric)">
+        <div :class="`item ${wordIndex === index ? 'active' : ''}`">{{item.text}}</div>
       </template>
     </div>
   </div>
@@ -19,15 +19,28 @@
 import {useRouter} from 'vue-router'
 import {useMainStore} from '../../store/main/index'
 import { storeToRefs } from 'pinia'
-import { parseLyric } from '../../utils/tools'
+import { foundSongWord, parseLyric } from '../../utils/tools'
+import { eventBus } from '../../event-bus'
+import { ref } from 'vue'
+
+const songWordRef = ref()
+const wordIndex = ref<number>(0)
 
 const mainStore = useMainStore()
 const { musicDetail } = storeToRefs(mainStore)
+
+eventBus.on("song-time", (currentTime: any) => {
+  const index = foundSongWord(parseLyric(musicDetail.value?.lyric), currentTime * 1000)
+  wordIndex.value = index
+  songWordRef.value.scrollTop = index*50
+})
 const router = useRouter()
 
 const handleBack = () => {
   router.back()
 }
+
+
 </script>
 
 <style scoped lang="less">
@@ -47,7 +60,7 @@ const handleBack = () => {
       z-index: -1;
     }
     .bg-cover {
-      background-color: rgba(0, 0, 0, 0.4);
+      background-color: rgba(0, 0, 0, 0.8);
       backdrop-filter: blur(10px);
     }
     .album {
@@ -62,7 +75,7 @@ const handleBack = () => {
       left: 45%;
       top: 6%;
       width: 55%;
-      aspect-ratio: 1/1;
+      height: 80%; 
       // background-color: #295;
       overflow-y: auto;
       &::-webkit-scrollbar {
@@ -70,11 +83,22 @@ const handleBack = () => {
       }
       .item {
         color: #aaa;
-        font-size: 15px;
+        font-size: 20px;
         width: 55%;
+        height: 50px;
+        line-height: 50px;
         margin: 0 auto;
         text-align: center;
-        margin-bottom: 30px;
+        font-weight: 500;
+        &:first-of-type {
+          margin-top: 40%;
+        }
+        &:last-of-type {
+          margin-bottom: 40%;
+        }
+      }
+      .item.active {
+        color: #fff;
         font-weight: 600;
       }
     }
