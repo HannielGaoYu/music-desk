@@ -13,8 +13,8 @@
 
 ### 3.页面展示
 
-![](https://github.com/phli-angel/music-desk/view-display/main-view1.png)
+![image](https://github.com/phli-angel/music-desk/blob/main/view-display/main-view1.png)
 
-![](https://github.com/phli-angel/music-desk/view-display/main-view2.png)
+![](https://github.com/phli-angel/music-desk/blob/main/view-display/main-view2.png)
 
-![](https://github.com/phli-angel/music-desk/view-display/play-view.png)
+![](https://github.com/phli-angel/music-desk/blob/main/view-display/play.png)
