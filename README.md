@@ -13,8 +13,8 @@
 
 ### 3.页面展示
 
-![](D:\electron\music-app\作品展示\Snipaste_2025-08-29_13-58-55.png)
+![](https://github.com/phli-angel/music-desk/view-display/main-view1.png)
 
-![](D:\electron\music-app\作品展示\Snipaste_2025-08-29_13-59-49.png)
+![](https://github.com/phli-angel/music-desk/view-display/main-view2.png)
 
-![](D:\electron\music-app\作品展示\Snipaste_2025-08-29_14-00-35.png)
+![](https://github.com/phli-angel/music-desk/view-display/play-view.png)
