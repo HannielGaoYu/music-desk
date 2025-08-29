@@ -17,4 +17,4 @@
 
 ![](https://github.com/phli-angel/music-desk/blob/main/view-display/main-view2.png)
 
-![](https://github.com/phli-angel/music-desk/blob/main/view-display/play.png)
+![](https://github.com/phli-angel/music-desk/blob/main/view-display/play-view.png)
