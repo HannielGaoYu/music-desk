@@ -7,10 +7,30 @@
     <div class="album" @click="handleBack">
       <img v-lazy="musicDetail?.pic" alt="" style="width: 100%; aspect-ratio: 1/1;">
     </div>
-    <div class="song-word" ref="songWordRef" @mouseenter="handleMove" @mouseleave="handleAutoMove">
+    <div class="song-word" ref="songWordRef" @mouseenter="handleEnter" @mouseleave="handleAutoMove" @scroll="handleMove">
       <template v-for="(item, index) in parseLyric(musicDetail?.lyric)">
-        <div :class="`item ${wordIndex === index ? 'active' : ''}`">{{item.text}}</div>
+        <div :class="`item ${wordIndex === index ? 'active' : ''}`" @click="handleChangeSongPeocess(item.time, index)">{{item.text}}</div>
       </template>
+    </div>
+    <div class="process-word" 
+      v-if="showSignWord && stopAutoScroll"
+      @mouseenter="handleSignShow"
+      style="position: absolute; top: 47%; right: 8.8%; display: flex; align-items: center;vertical-align: top; z-index: -1;"
+    >
+      <img 
+        src="../../assets/img/paly/右.png" 
+        alt="" 
+        class="right" 
+        style="width: 30px;
+        height: 20px; margin-right: 390px;"
+      >
+      <img 
+        src="../../assets/img/paly/左.png" 
+        alt="" 
+        class="right" 
+        style="width: 30px;
+        height: 20px;"
+      >
     </div>
   </div>
 </template>
@@ -38,7 +58,7 @@ const songWordRef = ref()
 const wordIndex = ref<number>(0)
 const scrollDistance = ref<number>(0)
 const stopAutoScroll = ref<boolean>(false)
-
+const showSignWord = ref<boolean>(false)
 const mainStore = useMainStore()
 const { musicDetail } = storeToRefs(mainStore)
 
@@ -75,12 +95,29 @@ const handleWordMatch = () => {
   })
 }
 
-const handleMove = () => {
+const handleEnter = () => {
   stopAutoScroll.value = true
+  showSignWord.value = true
+}
+
+const handleMove = () => {
+  showSignWord.value = true
 }
 
 const handleAutoMove = () => {
   stopAutoScroll.value = false
+}
+
+const handleSignShow = () => {
+  stopAutoScroll.value = true
+  showSignWord.value = true
+}
+
+const handleChangeSongPeocess = (time: number, index: number) => {
+  // alert(songWordRef.value.scrollTop +"-"+ index * 50)
+  if (songWordRef.value.scrollTop === index * 50) {
+    eventBus.emit("change-song-process", time)
+  }
 }
 
 </script>
@@ -130,6 +167,7 @@ const handleAutoMove = () => {
         width: 60%;
         height: 50px;
         line-height: 50px;
+        cursor: pointer;
         margin: 0 auto;
         text-align: center;
         font-weight: 500;

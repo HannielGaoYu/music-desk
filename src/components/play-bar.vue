@@ -191,6 +191,10 @@ eventBus.on("song-click", async(songInfo: any) => {
   songIds.value = songInfo?.ids
 })
 
+eventBus.on("change-song-process", (time: any) => {
+  audio.value.currentTime = time / 1000
+})
+
 const audio = ref()
 const isPlay = ref<boolean>(false)
 const plays = () => {
@@ -284,7 +288,7 @@ const handleSongQuality = async (event: any) => {
     }
     isShowLevelBar.value = false
     pause()
-    await mainStore.fetchMusicDetail(songIds.value + "", qualitySelect.value, "json")
+    await mainStore.fetchMusicDetail(playList.value[songIndex.value]?.id + "", qualitySelect.value, "json")
     audio.value.load()
     audio.value.currentTime = currentTime.value
     plays()
