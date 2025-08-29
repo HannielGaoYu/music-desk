@@ -7,7 +7,7 @@
     <div class="album" @click="handleBack">
       <img v-lazy="musicDetail?.pic" alt="" style="width: 100%; aspect-ratio: 1/1;">
     </div>
-    <div class="song-word" ref="songWordRef">
+    <div class="song-word" ref="songWordRef" @mouseenter="handleMove" @mouseleave="handleAutoMove">
       <template v-for="(item, index) in parseLyric(musicDetail?.lyric)">
         <div :class="`item ${wordIndex === index ? 'active' : ''}`">{{item.text}}</div>
       </template>
@@ -21,25 +21,67 @@ import {useMainStore} from '../../store/main/index'
 import { storeToRefs } from 'pinia'
 import { foundSongWord, parseLyric } from '../../utils/tools'
 import { eventBus } from '../../event-bus'
-import { ref } from 'vue'
+import { onActivated, onDeactivated, ref } from 'vue'
+
+onDeactivated(() => {
+  eventBus.off("song-time")
+})
+
+onActivated(() => {
+  songWordRef.value.scrollBy({top: wordIndex.value*50, behavior: 'smooth'})
+  setTimeout(() => {
+    handleWordMatch()
+  }, 300)
+})
 
 const songWordRef = ref()
 const wordIndex = ref<number>(0)
+const scrollDistance = ref<number>(0)
+const stopAutoScroll = ref<boolean>(false)
 
 const mainStore = useMainStore()
 const { musicDetail } = storeToRefs(mainStore)
 
-eventBus.on("song-time", (currentTime: any) => {
-  const index = foundSongWord(parseLyric(musicDetail.value?.lyric), currentTime * 1000)
-  wordIndex.value = index
-  songWordRef.value.scrollTop = index*50
-})
+// watch(scrollDistance, (newValue, oldValue) => {
+//   if (newValue - oldValue > 51) {
+//     stopAutoScroll.value = true
+//   } 
+// })
+
+// setInterval(() => {
+//   let v = scrollDistance.value
+//   setTimeout(() => {
+//     if (v === scrollDistance.value) {
+//       stopAutoScroll.value = false
+//     }
+//   }, 2500)
+// }, 300)
+
+
 const router = useRouter()
 
 const handleBack = () => {
   router.back()
 }
 
+const handleWordMatch = () => {
+  eventBus.on("song-time", (currentTime: any) => {
+    const index = foundSongWord(parseLyric(musicDetail.value?.lyric), currentTime * 1000)
+    wordIndex.value = index
+    scrollDistance.value = songWordRef.value.scrollTop
+    if (!stopAutoScroll.value) {
+      songWordRef.value.scrollTo({top: index*50, behavior: 'smooth'})
+    }
+  })
+}
+
+const handleMove = () => {
+  stopAutoScroll.value = true
+}
+
+const handleAutoMove = () => {
+  stopAutoScroll.value = false
+}
 
 </script>
 
@@ -72,24 +114,29 @@ const handleBack = () => {
     }
     .song-word {
       position: absolute;
-      left: 45%;
+      left: 40%;
       top: 6%;
-      width: 55%;
+      width: 60%;
       height: 80%; 
       // background-color: #295;
+      transition: all 1s ease-in;
       overflow-y: auto;
       &::-webkit-scrollbar {
         display: none;
       }
       .item {
         color: #aaa;
-        font-size: 20px;
-        width: 55%;
+        font-size: 19px;
+        width: 60%;
         height: 50px;
         line-height: 50px;
         margin: 0 auto;
         text-align: center;
         font-weight: 500;
+        overflow: hidden;
+        white-space: 1;
+        text-overflow: ellipsis;
+        transition: all 1s ease-in;
         &:first-of-type {
           margin-top: 40%;
         }

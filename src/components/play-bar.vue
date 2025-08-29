@@ -161,6 +161,9 @@ const {musicDetail, playList} = storeToRefs(mainStore)
 
 const router = useRouter()
 
+setInterval(() => {
+  eventBus.emit("song-time", currentTime.value)
+}, 500)
 
 eventBus.on("album-click", async(ids: any)=> {
   
@@ -219,7 +222,6 @@ const handleAudioTime = () => {
   duration.value = audio.value.duration
   per.value = (audio.value.currentTime / audio.value.duration) * 100
   console.log(per.value)
-  eventBus.emit("song-time", currentTime.value)
 }
 
 const handlePlayPre = async () => {
