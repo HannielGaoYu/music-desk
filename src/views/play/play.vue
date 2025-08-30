@@ -54,6 +54,11 @@ onActivated(() => {
   }, 300)
 })
 
+interface IRWord {
+  text: string,
+  time: number
+}
+
 const songWordRef = ref()
 const wordIndex = ref<number>(0)
 const scrollDistance = ref<number>(0)
@@ -61,6 +66,7 @@ const stopAutoScroll = ref<boolean>(false)
 const showSignWord = ref<boolean>(false)
 const mainStore = useMainStore()
 const { musicDetail } = storeToRefs(mainStore)
+const wordList = ref<IRWord[]>([])
 
 // watch(scrollDistance, (newValue, oldValue) => {
 //   if (newValue - oldValue > 51) {
@@ -86,7 +92,8 @@ const handleBack = () => {
 
 const handleWordMatch = () => {
   eventBus.on("song-time", (currentTime: any) => {
-    const index = foundSongWord(parseLyric(musicDetail.value?.lyric), currentTime * 1000)
+    wordList.value = parseLyric(musicDetail.value?.lyric)
+    const index = foundSongWord(wordList.value, currentTime * 1000)
     wordIndex.value = index
     scrollDistance.value = songWordRef.value.scrollTop
     if (!stopAutoScroll.value) {
@@ -114,8 +121,7 @@ const handleSignShow = () => {
 }
 
 const handleChangeSongPeocess = (time: number, index: number) => {
-  // alert(songWordRef.value.scrollTop +"-"+ index * 50)
-  if (songWordRef.value.scrollTop === index * 50) {
+  if (Math.abs(index * 50 - songWordRef.value.scrollTop) <= 25) {
     eventBus.emit("change-song-process", time)
   }
 }
