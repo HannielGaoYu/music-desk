@@ -143,7 +143,7 @@ const handleSongPlay = (songIds: number) => {
   }
   .main-right {
     width: 82%;
-    height: 100%;
+    height: calc(100% - 59px);
     overflow-y: scroll;
     background-color: #131419;
     &::-webkit-scrollbar {

@@ -90,8 +90,6 @@
           </div>
       </template> 
     </div>
-
-    <div class="treasure-song" style="height: 60px;"></div>
   </div>
 </template>
 

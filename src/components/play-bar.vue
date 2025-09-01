@@ -5,7 +5,7 @@
     <div class="bg-img" >
       <img :src="musicDetail?.pic" alt="" style="width: 100%;height: 100%;">
     </div>
-    <div class="main-bar">
+    <div class="main-bar" :style="`${route.path === '/main/recommend' ? 'background-color: rgba(24, 24, 24,1);' : ''}`">
       <div class="left" @click="handleNavSwitch">
         <img class="album" 
           loading="lazy"
@@ -100,6 +100,19 @@
         <div class="list" @click.stop="handleChangeSongListDisplay">
           <img :src="`${isShowList ? songListIconActive : songListIcon}`" style="width: 20px;
           height: 20px; vertical-align: top;" alt="">
+          <div class="song-list" v-show="isShowList">
+            <template v-for="(item, index) in playList">
+              <song-list-item 
+                width="300"
+                height="60"
+                :album="item?.al?.picUrl" 
+                :name="item?.name" 
+                :ar="item?.ar[0].name" 
+                :ids="item?.id" 
+                :id="index"
+              ></song-list-item>
+            </template>
+          </div>
         </div>
       </div>
     </div>
@@ -122,7 +135,8 @@ import songWordActiveIcon from '../assets/img/play-bar/点歌_词_32 (1).png'
 
 import songListIcon from '../assets/img/play-bar/音乐列表-copy.png'
 import songListIconActive from '../assets/img/play-bar/音乐列表-copy2.png'
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
+import SongListItem from '../components/song-list-item.vue'
 
 onUnmounted(() => {
   alert("hhh")
@@ -160,6 +174,7 @@ const mainStore = useMainStore()
 const {musicDetail, playList} = storeToRefs(mainStore)
 
 const router = useRouter()
+const route = useRoute()
 
 setInterval(() => {
   eventBus.emit("song-time", currentTime.value)
@@ -334,12 +349,12 @@ const handleNavSwitch = () => {
       margin: 0;
       padding: 0;
       width: 100%;
-      height: 60px;
+      height: 59px;
       z-index: -1;
     }
 
     .bg-cover {
-      background-color: rgba(0, 0, 0, 0.4);
+      background-color: rgba(0, 0, 0, 0.2);
       backdrop-filter: blur(20px);
       z-index: 2;
     }
@@ -464,6 +479,23 @@ const handleNavSwitch = () => {
                   background-color: #333;
                 }
               }
+            }
+          }
+        }
+        .list {
+          .song-list {
+            position: absolute;
+            bottom: 60px;
+            left: -130px;
+            background-color: #212324;
+            width: 312px;
+            height: 600px;
+            box-sizing: border-box;
+            padding: 6px;
+            overflow: auto;
+            border-radius: 10px;
+            &::-webkit-scrollbar {
+              display: none;
             }
           }
         }

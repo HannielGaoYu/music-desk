@@ -11,10 +11,10 @@ declare module 'vue' {
     AlbumCover: typeof import('./src/components/album-cover.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElProgress: typeof import('element-plus/es')['ElProgress']
-    HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     PlayBar: typeof import('./src/components/play-bar.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SongBox: typeof import('./src/components/song-box.vue')['default']
+    SongListItem: typeof import('./src/components/song-list-item.vue')['default']
   }
 }
