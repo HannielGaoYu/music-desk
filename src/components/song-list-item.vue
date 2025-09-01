@@ -4,10 +4,10 @@
       <img 
         v-lazy="album"
         class="album"
-        
+        @click="handleSongClick"
       />
       <div class="song-info">
-        <div class="song-name">{{ name }}-{{ 999 }}</div>
+        <div class="song-name">{{ name }}</div>
         <div class="song-ar">{{ ar }}</div>
       </div>
     </div>
@@ -27,10 +27,18 @@
 import { ref } from 'vue'
 import like from '../assets/img/play-bar/喜欢1.png'
 import likeActive from '../assets/img/play-bar/喜欢2.png'
+import { eventBus } from '../event-bus'
 
-const {album, name, ar, width, height} = defineProps(["album", "name", "ar", "ids", "id", "width", "height"])
+const {album, name, ar, ids, id, width, height} = defineProps(["album", "name", "ar", "ids", "id", "width", "height"])
 
 const likeState = ref<boolean>(false)
+
+const emit = defineEmits(["song-click"])
+const handleSongClick = (e: Event) => {
+  eventBus.emit("song-click", {ids, id})
+  emit("song-click")
+  e.stopPropagation()
+}
 </script>
 
 <style scoped lang="less">
@@ -65,8 +73,9 @@ const likeState = ref<boolean>(false)
       display: flex;
       align-items: center;
       .like, .download, .delete {
-        height: 30%;
+        height: 36%;
         aspect-ratio: 1/1;
+        margin-right: 10px;
       }
     }
   }

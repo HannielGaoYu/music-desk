@@ -190,6 +190,7 @@ eventBus.on("album-click", async(ids: any)=> {
 })
 
 eventBus.on("song-click", async(songInfo: any) => {
+  isShowList.value = false
   if (playList.value.length === 0) {
     songIndex.value = songInfo?.id
   }
@@ -430,7 +431,7 @@ const handleNavSwitch = () => {
             height: 320px;
             position: absolute;
             bottom: 42px;
-            left: -280px;
+            right: -40px;
             margin: 0 auto;
             z-index: 700;
             background-color: #1a1b20;
@@ -483,13 +484,14 @@ const handleNavSwitch = () => {
           }
         }
         .list {
+          position: relative;
           .song-list {
             position: absolute;
-            bottom: 60px;
-            left: -130px;
+            bottom: 42px;
+            right: 0;
             background-color: #212324;
             width: 312px;
-            height: 600px;
+            height: 500px;
             box-sizing: border-box;
             padding: 6px;
             overflow: auto;
