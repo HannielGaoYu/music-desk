@@ -38,6 +38,9 @@
       </div>
     </div>
     <div class="main-right">
+      <div class="top" style="box-sizing: border-box;padding: 10px 18px 6px 18px;">
+        <top-bar></top-bar>
+      </div>
       <router-view @song-to-main="handleSongPlay"></router-view>
     </div>
   </div>
@@ -45,6 +48,7 @@
 
 <script setup lang="ts">
 import { onUnmounted, ref } from 'vue'; 
+import TopBar from '../../components/top-bar.vue'
 
 onUnmounted(() => {
   alert("ddd")

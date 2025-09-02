@@ -3,6 +3,7 @@ import './assets/css/style.css'
 import App from './App.vue'
 import {createPinia} from 'pinia'
 import VueLazyload from 'vue-lazyload'
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import load from './assets/img/play-bar/b.gif'
 
 import router from './router'
@@ -18,6 +19,10 @@ app.use(VueLazyload, {
   loading: load, // 预加载图片
   attempt: 1 // 尝试加载图片的数量
 });
+
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+  app.component(key, component)
+}
 
 app.mount('#app').$nextTick(() => {
   // Use contextBridge
