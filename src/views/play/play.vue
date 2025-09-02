@@ -1,5 +1,9 @@
 <template>
   <div class="play">
+    <div class="top" style="box-sizing: border-box; padding: 20px;">
+      <top-bar type="play" color="white" size="20"></top-bar>
+    </div>
+    
     <div class="bg-img">
       <img v-lazy="musicDetail?.pic" alt="" style="width: 100%;height: 100%;">
     </div>
@@ -41,13 +45,14 @@ import {useMainStore} from '../../store/main/index'
 import { storeToRefs } from 'pinia'
 import { foundSongWord, parseLyric } from '../../utils/tools'
 import { eventBus } from '../../event-bus'
-import { onActivated, onDeactivated, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
+import TopBar from '../../components/top-bar.vue'
 
-onDeactivated(() => {
+onUnmounted(() => {
   eventBus.off("song-time")
 })
 
-onActivated(() => {
+onMounted(() => {
   songWordRef.value.scrollBy({top: wordIndex.value*50, behavior: 'smooth'})
   setTimeout(() => {
     handleWordMatch()

@@ -18,15 +18,21 @@
 </template>
 
 <script setup lang="ts">
-  import {eventBus} from '../event-bus/index'
-  const { icon, big, cover, album, text, ids } = defineProps(['icon', 'big', 'cover', 'album', 'text', 'ids'])
-  
-  const emit = defineEmits(["album-click"])
+import { useRouter } from 'vue-router'
+import {eventBus} from '../event-bus/index'
 
-  const handleClick = () => {
-    emit("album-click")
+const { icon, big, cover, album, text, ids, type, id } = defineProps(['icon', 'big', 'cover', 'album', 'text', 'ids', 'type', 'id'])
+
+const emit = defineEmits(["album-click"])
+const router = useRouter()
+
+const handleClick = async () => {
+  if (type === "songs-list") {
+    router.push({path: '/main/songs-detail', query: {id}})
+  } else {
     eventBus.emit("album-click", ids)
   }
+}
 </script>
 
 <style scoped lang="less">

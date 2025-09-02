@@ -5,7 +5,7 @@
     <div class="bg-img" >
       <img :src="musicDetail?.pic" alt="" style="width: 100%;height: 100%;">
     </div>
-    <div class="main-bar" :style="`${route.path === '/main/recommend' ? 'background-color: rgba(24, 24, 24,1);' : ''}`">
+    <div class="main-bar" :style="`${route.path === '/play' ? '' : 'background-color: rgba(24, 24, 24,1);'}`">
       <div class="left" @click="handleNavSwitch">
         <img class="album" 
           loading="lazy"

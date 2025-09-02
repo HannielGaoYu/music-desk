@@ -5,7 +5,6 @@ import path from 'node:path'
 import fs from 'node:fs'
 import { MusicInfo } from '../src/type'
 import axios from 'axios'
-import { eventBus } from '../src/event-bus'
 
 // import {Menu} from 'electron'
 
@@ -103,6 +102,11 @@ function createWindow() {
       event.sender.send('download-err', {filename, error: err.message})
       console.log(err.message)
     }
+  })
+
+  ipcMain.handle('full-shrink-screen', async (event, res) => {
+    if (event) {}
+    win?.setFullScreen(res.state)
   })
 
   // Menu.setApplicationMenu(null)

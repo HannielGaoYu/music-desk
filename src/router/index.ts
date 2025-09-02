@@ -50,6 +50,7 @@ export default createRouter({
           component: onlineExtract
         },
         {
+          name: "songs-detail",
           path: "/main/songs-detail",
           component: songsDetail
         }

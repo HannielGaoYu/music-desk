@@ -47,12 +47,8 @@
 </template>
 
 <script setup lang="ts">
-import { onUnmounted, ref } from 'vue'; 
+import { ref } from 'vue'; 
 import TopBar from '../../components/top-bar.vue'
-
-onUnmounted(() => {
-  alert("ddd")
-})
 
  // 需引入 ipcRenderer 
 const ipcRenderer = window.ipcRenderer 

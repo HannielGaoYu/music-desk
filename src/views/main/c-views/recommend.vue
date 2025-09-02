@@ -44,6 +44,8 @@
             cover="true" 
             :album="item?.coverImgUrl" 
             :text="item?.name"
+            :id="item?.id"
+            type="songs-list"
             >
             </album-cover>
           </div>
@@ -86,7 +88,15 @@
     <div class="songs-hot">
       <template v-for="(item) in randPlayList" key="*this">
           <div class="item">
-            <album-cover icon="left" cover="true" :album="item?.coverImgUrl" :text="item?.name"></album-cover>
+            <album-cover 
+              icon="left" 
+              cover="true" 
+              :album="item?.coverImgUrl" 
+              :text="item?.name"
+              type="songs-list"
+              :id="item.id"
+            >
+            </album-cover>
           </div>
       </template> 
     </div>
