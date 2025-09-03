@@ -28,7 +28,9 @@
       <div class="amplify-shrink" @click="handleFullScreen">
         <el-icon :size="fontSize"><CopyDocument :color="color"/></el-icon>
       </div>
-      <el-icon :size="fontSize"><Close :color="color"/></el-icon>
+      <div class="exit" @click="handleExit">
+        <el-icon :size="fontSize"><Close :color="color"/></el-icon>
+      </div>
     </div>
   </div>
 </template>
@@ -57,6 +59,10 @@ const handleNext = () => {
 const handleFullScreen = () => {
   fullState.value = !fullState.value
   ipcRenderer.invoke("full-shrink-screen", {state: fullState.value})
+}
+
+const handleExit = () => {
+  ipcRenderer.invoke("close")
 }
 </script>
 

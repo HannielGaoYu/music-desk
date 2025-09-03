@@ -109,6 +109,10 @@ function createWindow() {
     win?.setFullScreen(res.state)
   })
 
+  ipcMain.handle('close', () => {
+    win?.close()
+  })
+
   // Menu.setApplicationMenu(null)
 
   if (VITE_DEV_SERVER_URL) {

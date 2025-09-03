@@ -16791,6 +16791,9 @@ function createWindow() {
   ipcMain.handle("full-shrink-screen", async (event, res) => {
     win == null ? void 0 : win.setFullScreen(res.state);
   });
+  ipcMain.handle("close", () => {
+    win == null ? void 0 : win.close();
+  });
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL);
   } else {
