@@ -41,7 +41,9 @@
       <div class="top" style="box-sizing: border-box;padding: 10px 18px 6px 18px;">
         <top-bar></top-bar>
       </div>
-      <router-view @song-to-main="handleSongPlay"></router-view>
+      <div class="content" >
+        <router-view @song-to-main="handleSongPlay"></router-view>
+      </div>
     </div>
   </div>
 </template>
@@ -143,11 +145,18 @@ const handleSongPlay = (songIds: number) => {
   }
   .main-right {
     width: 82%;
-    height: calc(100% - 59px);
-    overflow-y: scroll;
+    height: calc(100% - 60px);
+    overflow-y: hidden;
     background-color: #131419;
     &::-webkit-scrollbar {
       display: none;
+    }
+    .content {
+      height: 98%;
+      overflow-y: scroll;
+      &::-webkit-scrollbar {
+        display: none;
+      }
     }
   }
 </style>

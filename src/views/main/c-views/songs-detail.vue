@@ -49,7 +49,7 @@ onMounted(() => {
     }
     .main {
       box-sizing: border-box;
-      padding: 10px;
+      padding: 20px 20px 30px 20px;
     }
   }
 </style>

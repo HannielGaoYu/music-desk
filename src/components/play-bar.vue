@@ -1,5 +1,5 @@
 <template>
-  <div class="play-bar" @click="handleCloseTab">
+  <div class="play-bar" @click="handleCloseTab" :style="`${route.path === '/play' ? '' : 'background-color: rgba(24, 24, 24,1);'}`">
     <div class="line" :style="'width: ' + per + '%;'" ></div>
     <div class="bg-cover"></div>
     <div class="bg-img" >
