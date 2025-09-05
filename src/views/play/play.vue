@@ -8,6 +8,9 @@
       <img v-lazy="musicDetail?.pic" alt="" style="width: 100%;height: 100%;">
     </div>
     <div class="bg-cover"></div>
+    <div class="song-info">
+      <span>{{ musicDetail.name }}-{{ musicDetail?.ar_name }}</span>
+    </div>
     <div class="album" @click="handleBack">
       <img v-lazy="musicDetail?.pic" alt="" style="width: 100%; aspect-ratio: 1/1;">
     </div>
@@ -19,14 +22,13 @@
     <div class="process-word" 
       v-if="showSignWord && stopAutoScroll"
       @mouseenter="handleSignShow"
-      style="position: absolute; top: 47%; right: 8.8%; display: flex; align-items: center;vertical-align: top; z-index: -1;"
+      style=""
     >
       <img 
         src="../../assets/img/paly/右.png" 
         alt="" 
         class="right" 
-        style="width: 30px;
-        height: 20px; margin-right: 390px;"
+        style="width: 30px; height: 20px;"
       >
       <img 
         src="../../assets/img/paly/左.png" 
@@ -153,6 +155,16 @@ const handleChangeSongPeocess = (time: number, index: number) => {
       background-color: rgba(0, 0, 0, 0.8);
       backdrop-filter: blur(10px);
     }
+    .song-info {
+      position: absolute;
+      top: 6%;
+      right: 15%;
+      width: 30%;
+      text-align: center;
+      color: #fff;
+      font-size: 22px;
+      font-weight: 600;
+    }
     .album {
       position: absolute;
       left: 10%;
@@ -163,9 +175,9 @@ const handleChangeSongPeocess = (time: number, index: number) => {
     .song-word {
       position: absolute;
       left: 40%;
-      top: 6%;
+      top: 13.5%;
       width: 60%;
-      height: 80%; 
+      height: 73%; 
       // background-color: #295;
       transition: all 1s ease-in;
       overflow-y: auto;
@@ -187,10 +199,10 @@ const handleChangeSongPeocess = (time: number, index: number) => {
         text-overflow: ellipsis;
         transition: all 1s ease-in;
         &:first-of-type {
-          margin-top: 40%;
+          margin-top: 30%;
         }
         &:last-of-type {
-          margin-bottom: 40%;
+          margin-bottom: 70%;
         }
       }
       .item.active {
@@ -198,6 +210,16 @@ const handleChangeSongPeocess = (time: number, index: number) => {
         font-weight: 600;
       }
     }
-
+    .process-word {
+      position: absolute; 
+      top: 44.6%; 
+      left: 45%;
+      width: 50%;
+      display: flex; 
+      justify-content: space-between;
+      align-items: center;
+      vertical-align: top; 
+      z-index: -1;
+    }
   }
 </style>

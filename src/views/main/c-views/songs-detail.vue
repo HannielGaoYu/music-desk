@@ -1,7 +1,8 @@
 <template>
   <div class="songs-deatil">
     <div class="top">
-      <div class="songs-ablum"></div>
+      <img class="songs-ablum" :src="playListInfo?.coverImgUrl" style="width: 200px;
+      height: 200px;"></img>
       <div class="songs-info">
         <div class="info-top"></div>
         <div class="create-info"></div>
@@ -32,16 +33,20 @@ import { storeToRefs } from 'pinia';
 
 const route = useRoute()
 const mainStore = useMainStore()
-const {playList} = storeToRefs(mainStore)
+const id = route.query!.id as unknown as number
+mainStore.fetchPlayList(id);
+const {playList, playListInfo} = storeToRefs(mainStore)
 onMounted(() => {
-  const id = route.query!.id as unknown as number
-  mainStore.fetchPlayList(id);
+  
 })
 </script>
 
 <style scoped lang="less">
   .songs-deatil {
     color: #fff;
+    .top {
+      height: 300px;
+    }
     .main {
       box-sizing: border-box;
       padding: 10px;
