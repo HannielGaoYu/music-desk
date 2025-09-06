@@ -10,11 +10,13 @@
       <div class="search">
         <el-input
           v-model="text"
-          style="width: 240px"
-          placeholder="Please Input"
+          style="width: 240px; color:#fff;"
+          placeholder="请输入音乐名与歌手名"
+          textareaStyle="color: #fff;"
           :prefix-icon="Search"
           size="small"
           color="red"
+          @keydown="handleSearchClick"
         />
       </div>
     </div>
@@ -39,6 +41,7 @@
 import { ref } from 'vue'
 import { Search } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
+import { useMainStore } from '../store/main'
 
 const { type, color, size } = defineProps(["type", "color", "size"])
 
@@ -48,12 +51,21 @@ const text = ref<string>('')
 const fullState = ref<boolean>(false)
 const router = useRouter()
 
+const mainStore = useMainStore()
+
 const handleBack = () => {
   router.back()
 }
 
 const handleNext = () => {
   router.go(1)
+}
+
+const handleSearchClick = (e: KeyboardEvent) => {
+  if (e.keyCode === 13 || e.keyCode === 100) {
+    mainStore.fetchMusicSearchRes(text.value, 100)
+    router.push("/main/songs-found")
+  }
 }
 
 const handleFullScreen = () => {
@@ -84,6 +96,9 @@ const handleExit = () => {
       }
       :deep(.el-input__wrapper) {
         background-color: transparent !important;
+      }
+      :deep(.el-input__inner) {
+        color: #fff;
       }
     }
 

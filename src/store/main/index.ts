@@ -5,7 +5,7 @@ interface IMainState {
   banner: any[],
   playList: any[]
   topPlayList: any[]
-  musicSearchRes: any[]
+  musicSearchRes: any
   musicDetail: any
   hotPlayList: any[],
   playListInfo: any
@@ -16,7 +16,7 @@ export const useMainStore = defineStore('main',{
     banner: [],
     playList: [],
     topPlayList: [],
-    musicSearchRes: [],
+    musicSearchRes: {},
     musicDetail: {},
     hotPlayList: [],
     playListInfo: {}
@@ -42,9 +42,9 @@ export const useMainStore = defineStore('main',{
       const res = await getTopPlayList(cat, limit, offset)
       this.topPlayList = res.data.playlists
     },
-    async fetchMusicSearchRes(keywords: string) {
-      const res = await getMusicSearchRes(keywords)
-      this.musicSearchRes = res
+    async fetchMusicSearchRes(keywords: string, count: number) {
+      const res = await getMusicSearchRes(keywords, count)
+      this.musicSearchRes = res.data.result
     },
     async fetchMusicDetail(ids: string, level: string, type: string) {
       const res = await getMusicDetail(ids, level, type)

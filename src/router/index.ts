@@ -17,6 +17,7 @@ import onlineExtract from '../views/main/c-views/online-extract.vue'
 const Play = () => import('../views/play/play.vue')
 
 const songsDetail = () => import('../views/main/c-views/songs-detail.vue')
+const songsFound = () => import('../views/main/c-views/songs-found.vue')
 
 export default createRouter({
   history: createWebHashHistory(),
@@ -53,6 +54,10 @@ export default createRouter({
           name: "songs-detail",
           path: "/main/songs-detail",
           component: songsDetail
+        },
+        {
+          path: "/main/songs-found",
+          component: songsFound
         }
       ]
     },
