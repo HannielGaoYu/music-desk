@@ -15,10 +15,10 @@
       </router-link>
       <div class="line">
       </div>
-      <div class="my-like left-item">
+      <router-link class="my-like left-item" to="/main/songs-favor">
         <img src="../../assets/img/main-left/213喜欢.png" alt="" class="icon">
         <div class="text">我喜欢的音乐</div>
-      </div>
+      </router-link>
       <div class="local-and-download left-item">
         <img src="../../assets/img/main-left/下载.png" alt="" class="icon">
         <div class="text">本地与下载</div>
@@ -49,8 +49,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'; 
+import { onMounted, ref } from 'vue'; 
 import TopBar from '../../components/top-bar.vue'
+import { useMainStore } from '../../store/main';
 
  // 需引入 ipcRenderer 
 const ipcRenderer = window.ipcRenderer 
@@ -62,6 +63,13 @@ const startMouseY = ref<number>(0); // 鼠标按下时的屏幕 Y 坐标
 let baseX = ref<number>(0)
 let baseY = ref<number>(0)
 const songId = ref<number>(0)
+const mainStore = useMainStore()
+
+onMounted(() => {
+  ipcRenderer.invoke('get-like-info').then(res => {
+    mainStore.musicLikeInfo = JSON.parse(res)
+  })
+})
  
 const mousedown = async (event: MouseEvent) => { 
   isKeyDown.value  = true; 

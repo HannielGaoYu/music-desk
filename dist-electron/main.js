@@ -16739,6 +16739,8 @@ process.env.APP_ROOT = path$1.join(__dirname, "..");
 const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
 const MAIN_DIST = path$1.join(process.env.APP_ROOT, "dist-electron");
 const RENDERER_DIST = path$1.join(process.env.APP_ROOT, "dist");
+const fsp = fs$1.promises;
+const appPath = app.isPackaged ? path$1.dirname(app.getPath("exe")) + "/files" : app.getAppPath() + "/files";
 process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path$1.join(process.env.APP_ROOT, "public") : RENDERER_DIST;
 let win;
 function createWindow() {
@@ -16752,7 +16754,7 @@ function createWindow() {
       preload: path$1.join(__dirname, "preload.mjs")
     }
   });
-  win.webContents.on("did-finish-load", () => {
+  win.webContents.on("did-finish-load", async () => {
     win == null ? void 0 : win.webContents.send("main-process-message", (/* @__PURE__ */ new Date()).toLocaleString());
   });
   ipcMain.handle("custom-adsorption", (event, res) => {
@@ -16771,7 +16773,6 @@ function createWindow() {
     const { url: url2, artist, filename } = musicInfo;
     const downloadPath = "D:\\MyMusic\\" + artist + "\\";
     const filePath = downloadPath + filename;
-    console.log(filePath);
     if (!fs$1.existsSync(downloadPath)) {
       fs$1.mkdirSync(downloadPath, { recursive: true });
     }
@@ -16783,7 +16784,6 @@ function createWindow() {
       response.data.on("data", (chunk) => {
         downloadedLength += chunk.length;
         let progress = Math.floor(downloadedLength / totalLength * 100);
-        console.log(progress);
         win == null ? void 0 : win.webContents.send("download-progress", progress);
       });
       response.data.pipe(writer);
@@ -16792,7 +16792,6 @@ function createWindow() {
       });
     } catch (err) {
       event.sender.send("download-err", { filename, error: err.message });
-      console.log(err.message);
     }
   });
   ipcMain.handle("full-shrink-screen", async (event, res) => {
@@ -16800,6 +16799,12 @@ function createWindow() {
   });
   ipcMain.handle("close", () => {
     win == null ? void 0 : win.close();
+  });
+  ipcMain.handle("like-info", async (event, info) => {
+    await fsp.writeFile(appPath + "/like.json", info);
+  });
+  ipcMain.handle("get-like-info", async (event) => {
+    return await fsp.readFile(appPath + "/like.json", "utf-8");
   });
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL);

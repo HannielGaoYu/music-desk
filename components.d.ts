@@ -9,10 +9,8 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AlbumCover: typeof import('./src/components/album-cover.vue')['default']
-    ElButton: typeof import('element-plus/es')['ElButton']
     ElIcon: typeof import('element-plus/es')['ElIcon']
     ElInput: typeof import('element-plus/es')['ElInput']
-    ElProgress: typeof import('element-plus/es')['ElProgress']
     PlayBar: typeof import('./src/components/play-bar.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

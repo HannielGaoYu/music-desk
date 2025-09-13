@@ -18,6 +18,7 @@ const Play = () => import('../views/play/play.vue')
 
 const songsDetail = () => import('../views/main/c-views/songs-detail.vue')
 const songsFound = () => import('../views/main/c-views/songs-found.vue')
+const songsFavor = () => import('../views/main/c-views/songs-favor.vue')
 
 export default createRouter({
   history: createWebHashHistory(),
@@ -58,6 +59,10 @@ export default createRouter({
         {
           path: "/main/songs-found",
           component: songsFound
+        },
+        {
+          path: "/main/songs-favor",
+          component: songsFavor
         }
       ]
     },

@@ -389,6 +389,12 @@ const handleNavSwitch = () => {
           flex-direction: column;
           justify-content: center;
           margin-left: 10px;
+          .name, ar {
+            width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap; 
+          }
         }
       }
       .center {

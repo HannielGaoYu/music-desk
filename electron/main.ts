@@ -27,6 +27,9 @@ export const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
 export const MAIN_DIST = path.join(process.env.APP_ROOT, 'dist-electron')
 export const RENDERER_DIST = path.join(process.env.APP_ROOT, 'dist')
 
+const fsp = fs.promises
+const appPath = app.isPackaged ? path.dirname(app.getPath('exe')) + "/files" : app.getAppPath() + "/files"
+
 
 process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, 'public') : RENDERER_DIST
 
@@ -45,7 +48,7 @@ function createWindow() {
   })
 
   // Test active push message to Renderer-process.
-  win.webContents.on('did-finish-load', () => {
+  win.webContents.on('did-finish-load', async() => {
     win?.webContents.send('main-process-message', (new Date).toLocaleString())
   })
 
@@ -54,7 +57,6 @@ function createWindow() {
     let x = res.appX
     let y = res.appY
     win && win.setBounds({ x, y, width: res.width, height: res.height })
-    // console.log(event)
   })
 
   ipcMain.handle('get-window-position',  () => { 
@@ -72,7 +74,6 @@ function createWindow() {
 
     const filePath = downloadPath + filename
 
-    console.log(filePath)
 
     if (!fs.existsSync(downloadPath)) {
       fs.mkdirSync(downloadPath, {recursive: true})
@@ -88,7 +89,6 @@ function createWindow() {
       response.data.on('data', (chunk: any) => {
         downloadedLength += chunk.length; 
         let progress = Math.floor((downloadedLength  / totalLength) * 100);
-        console.log(progress)
         win?.webContents.send('download-progress', progress)
       })
 
@@ -100,7 +100,6 @@ function createWindow() {
     });
     } catch (err: any) {
       event.sender.send('download-err', {filename, error: err.message})
-      console.log(err.message)
     }
   })
 
@@ -113,6 +112,16 @@ function createWindow() {
     win?.close()
   })
 
+  ipcMain.handle('like-info', async (event,info) => {
+    if (event) {}
+    // await fsp.mkdir(appPath)
+    await fsp.writeFile(appPath + "/like.json", info)
+  })
+
+  ipcMain.handle('get-like-info', async (event) => {
+    if (event) {}
+    return await fsp.readFile(appPath + "/like.json", "utf-8")
+  })
   // Menu.setApplicationMenu(null)
 
   if (VITE_DEV_SERVER_URL) {
@@ -142,5 +151,4 @@ app.on('activate', () => {
     createWindow()
   }
 })
-
 app.whenReady().then(createWindow)

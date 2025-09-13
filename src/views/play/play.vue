@@ -158,12 +158,18 @@ const handleChangeSongPeocess = (time: number, index: number) => {
     .song-info {
       position: absolute;
       top: 6%;
-      right: 15%;
-      width: 30%;
+      right: 5%;
+      width: 50%;
       text-align: center;
       color: #fff;
       font-size: 22px;
       font-weight: 600;
+      overflow:hidden;
+      word-wrap: break-word;
+      text-overflow:ellipsis;
+      display:-webkit-box;
+      -webkit-box-orient:vertical;
+      line-clamp:2;
     }
     .album {
       position: absolute;
@@ -179,7 +185,7 @@ const handleChangeSongPeocess = (time: number, index: number) => {
       width: 60%;
       height: 73%; 
       // background-color: #295;
-      transition: all 1s ease-in;
+      transition: all 0.2s ease-in;
       overflow-y: auto;
       &::-webkit-scrollbar {
         display: none;
@@ -197,7 +203,7 @@ const handleChangeSongPeocess = (time: number, index: number) => {
         overflow: hidden;
         white-space: 1;
         text-overflow: ellipsis;
-        transition: all 1s ease-in;
+        transition: all 0.2s ease-in;
         &:first-of-type {
           margin-top: 30%;
         }

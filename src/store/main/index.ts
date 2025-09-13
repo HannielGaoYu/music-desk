@@ -1,14 +1,20 @@
 import {defineStore} from 'pinia'
 import {getBanner, getPlayList, getTopPlayList, getMusicSearchRes, getMusicDetail} from '../../service/main/music'
 
+interface IMusiclikeInfo {
+  data: any[]
+  lastSong: any
+}
+
 interface IMainState {
-  banner: any[],
+  banner: any[]
   playList: any[]
   topPlayList: any[]
   musicSearchRes: any
   musicDetail: any
-  hotPlayList: any[],
+  hotPlayList: any[]
   playListInfo: any
+  musicLikeInfo: IMusiclikeInfo
 }
 
 export const useMainStore = defineStore('main',{
@@ -19,7 +25,11 @@ export const useMainStore = defineStore('main',{
     musicSearchRes: {},
     musicDetail: {},
     hotPlayList: [],
-    playListInfo: {}
+    playListInfo: {},
+    musicLikeInfo: {
+      data: [],
+      lastSong: {}
+    }
   }),
   getters: {},
   actions: {
@@ -28,6 +38,7 @@ export const useMainStore = defineStore('main',{
       this.banner = res.data.banners
     },
     async fetchPlayList(id: number) {
+      this.playList = []
       const res = await getPlayList(id)
       this.playList = res.data.playlist.tracks
       this.playListInfo = res.data.playlist
