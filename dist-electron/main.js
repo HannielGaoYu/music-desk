@@ -16740,7 +16740,7 @@ const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
 const MAIN_DIST = path$1.join(process.env.APP_ROOT, "dist-electron");
 const RENDERER_DIST = path$1.join(process.env.APP_ROOT, "dist");
 const fsp = fs$1.promises;
-const appPath = app.isPackaged ? path$1.dirname(app.getPath("exe")) + "/files" : app.getAppPath() + "/files";
+const appPath = app.isPackaged ? process.resourcesPath + "/files" : app.getAppPath() + "/files";
 process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path$1.join(process.env.APP_ROOT, "public") : RENDERER_DIST;
 let win;
 function createWindow() {
@@ -16749,7 +16749,7 @@ function createWindow() {
     height: 650,
     frame: false,
     resizable: true,
-    icon: path$1.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
+    icon: path$1.join(process.env.VITE_PUBLIC, "icon-win.png"),
     webPreferences: {
       preload: path$1.join(__dirname, "preload.mjs")
     }
@@ -16757,6 +16757,7 @@ function createWindow() {
   win.webContents.on("did-finish-load", async () => {
     win == null ? void 0 : win.webContents.send("main-process-message", (/* @__PURE__ */ new Date()).toLocaleString());
   });
+  win.webContents.openDevTools();
   ipcMain.handle("custom-adsorption", (event, res) => {
     let x = res.appX;
     let y = res.appY;
@@ -16801,10 +16802,17 @@ function createWindow() {
     win == null ? void 0 : win.close();
   });
   ipcMain.handle("like-info", async (event, info) => {
+    await fsp.mkdir(appPath).catch(() => {
+    });
     await fsp.writeFile(appPath + "/like.json", info);
   });
   ipcMain.handle("get-like-info", async (event) => {
-    return await fsp.readFile(appPath + "/like.json", "utf-8");
+    try {
+      await fsp.mkdir(appPath).catch(() => {
+      });
+      return await fsp.readFile(appPath + "/like.json", "utf-8");
+    } catch {
+    }
   });
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL);

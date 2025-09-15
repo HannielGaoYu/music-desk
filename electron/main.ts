@@ -28,7 +28,7 @@ export const MAIN_DIST = path.join(process.env.APP_ROOT, 'dist-electron')
 export const RENDERER_DIST = path.join(process.env.APP_ROOT, 'dist')
 
 const fsp = fs.promises
-const appPath = app.isPackaged ? path.dirname(app.getPath('exe')) + "/files" : app.getAppPath() + "/files"
+const appPath = app.isPackaged ? process.resourcesPath + "/files" : app.getAppPath() + "/files"
 
 
 process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, 'public') : RENDERER_DIST
@@ -41,11 +41,13 @@ function createWindow() {
     height: 650,
     frame: false,
     resizable: true,
-    icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
+    icon: path.join(process.env.VITE_PUBLIC, 'icon-win.png'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.mjs'),
     }
   })
+
+  // win.webContents.openDevTools()
 
   // Test active push message to Renderer-process.
   win.webContents.on('did-finish-load', async() => {
@@ -115,12 +117,20 @@ function createWindow() {
   ipcMain.handle('like-info', async (event,info) => {
     if (event) {}
     // await fsp.mkdir(appPath)
+    
+    await fsp.mkdir(appPath).catch(() => {})
     await fsp.writeFile(appPath + "/like.json", info)
   })
 
   ipcMain.handle('get-like-info', async (event) => {
     if (event) {}
-    return await fsp.readFile(appPath + "/like.json", "utf-8")
+    try {
+      await fsp.mkdir(appPath).catch(() => {})
+      return await fsp.readFile(appPath + "/like.json", "utf-8")
+    } catch {
+      
+    }
+    
   })
   // Menu.setApplicationMenu(null)
 

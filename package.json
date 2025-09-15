@@ -1,14 +1,15 @@
 {
   "name": "music-desk",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.2",
   "type": "module",
   "author": "phli",
   "description": "a music desktop app",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build && electron-builder",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "electron:generate-icons": "electron-icon-builder --input=./public/icon-win.png --output=build --flatten"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",
@@ -24,6 +25,7 @@
     "@vitejs/plugin-vue": "^5.0.4",
     "electron": "^30.0.1",
     "electron-builder": "^24.13.3",
+    "electron-icon-builder": "^2.0.1",
     "less": "^4.4.0",
     "typescript": "^5.2.2",
     "unplugin-auto-import": "^19.3.0",
